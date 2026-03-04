@@ -35,7 +35,7 @@ transporter.use("compile", hbs(handlebarOptions));
 
 const sendEmail = async ({ to, subject, template, context }) => {
   await transporter.sendMail({
-    from: 'Notiva',
+    from: 'Health Mate',
     to,
     subject,
     template, // e.g., 'verify-email'

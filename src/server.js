@@ -23,10 +23,10 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-app.use(cors({
-    credentials: true,
-    origin: true
-}))
+// app.use(cors({
+//     credentials: true,
+//     origin: true
+// }))
 app.use(express.json());
 app.use(express.urlencoded({  extended: true }));
 app.use(cookieParser());
