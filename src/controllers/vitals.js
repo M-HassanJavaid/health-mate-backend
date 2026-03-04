@@ -10,9 +10,7 @@ export async function addVitals(req, res) {
             sleepingDuration,
             notes
         } = req.body;
-        console.log(req.body)
 
-        console.log(!weight && !sugar && !bloodPressure && !sleepingDuration && !notes)
         if (!weight && !sugar && !bloodPressure && !sleepingDuration && !notes) {
             return res.status(400).json({
                 success: false,
@@ -30,10 +28,6 @@ export async function addVitals(req, res) {
             newVitals.weight = weight;
             user.lastWeight = weight;
         }
-        if (sugar) {
-            newVitals.sugar = sugar;
-            user.lastSugar = sugar;
-        }
         if (bloodPressure) {
             let {diastolic , systolic} = bloodPressure;
             if (!diastolic || !systolic) {
@@ -48,6 +42,11 @@ export async function addVitals(req, res) {
             user.lastBloodPressure.systolic = systolic;
             newVitals.bloodPressure.diastolic = diastolic;
             user.lastBloodPressure.diastolic = diastolic;
+        }
+        
+        if (sugar) {
+            newVitals.sugar = sugar;
+            user.lastSugar = sugar;
         }
 
         if (sleepingDuration) {
