@@ -10,8 +10,9 @@ export async function addVitals(req, res) {
             sleepingDuration,
             notes
         } = req.body;
+        console.log(req.body)
 
-        
+        console.log(!weight && !sugar && !bloodPressure && !sleepingDuration && !notes)
         if (!weight && !sugar && !bloodPressure && !sleepingDuration && !notes) {
             return res.status(400).json({
                 success: false,

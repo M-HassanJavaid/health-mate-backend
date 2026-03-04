@@ -431,7 +431,10 @@ export async function getUser(req, res) {
 
 export async function getLogout(req, res) {
     try {
-        res.clearCookie('authToken');
+        res.clearCookie('authToken' , {
+            sameSite: "none",
+            secure: true,
+        });
         res.status(200).json({
             success: true,
             message: 'Logout successfully.'
