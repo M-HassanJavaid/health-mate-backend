@@ -173,9 +173,9 @@ export async function markUserVerify(req, res) {
         user.isVerified = true;
         await user.save();
 
-        res.redirect();
+        res.redirect('https://health-mate-frontend-six.vercel.app');
 
-    } catch (error) {'https://health-mate-frontend-six.vercel.app'
+    } catch (error) {
         res.send(error.message)
     }
 };
