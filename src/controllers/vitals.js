@@ -29,8 +29,9 @@ export async function addVitals(req, res) {
             newVitals.weight = weight;
             user.lastWeight = weight;
         }
-        if (bloodPressure) {
-            let { diastolic, systolic } = bloodPressure;
+        console.log(bloodPressure)
+        if (bloodPressure?.diastolic || bloodPressure?.systolic) {
+            let { diastolic, systolic } = bloodPressure || {};
             if (!diastolic || !systolic) {
                 return res.status(400).json({
                     success: false,
@@ -135,7 +136,7 @@ export async function deleteVitals(req, res) {
             message: 'Vitals has deleted successfully'
         });
 
-        
+
     } catch (error) {
         res.status(500).json({
             success: false,
