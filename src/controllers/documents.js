@@ -182,7 +182,10 @@ export async function updateDocument(req , res) {
 export async function deleteDocument(req  , res) {
     try {
         let documentId = req.params.id;
-        let deletedDocument = await Document.findByIdAndDelete(documentId);
+        let deletedDocument = await Document.findByIdAndDelete({
+            _id: new mongoose.Types.ObjectId(documentId),
+            user: req.user._id
+        });
         if (!deletedDocument) {
             return res.status(404).json({
                 success: false,
