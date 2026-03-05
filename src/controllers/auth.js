@@ -71,7 +71,7 @@ export async function signup(req, res) {
             template: 'verificationEmail',
             context: {
                 name: savedUser.name,
-                verificationUrl: `https://health-mate-backend-two.vercel.app//api/v1/auth/markVerify/${verificationToken}`,
+                verificationUrl: `https://health-mate-backend-two.vercel.app/api/v1/auth/markVerify/${verificationToken}`,
                 year: new Date().getFullYear()
             }
         })
@@ -173,9 +173,9 @@ export async function markUserVerify(req, res) {
         user.isVerified = true;
         await user.save();
 
-        res.redirect(process.env.CLIENT_URL);
+        res.redirect();
 
-    } catch (error) {
+    } catch (error) {'https://health-mate-frontend-six.vercel.app'
         res.send(error.message)
     }
 };
