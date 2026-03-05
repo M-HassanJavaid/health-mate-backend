@@ -89,3 +89,26 @@ export async function getVitals(req ,res) {
         })
     }
 }
+
+export async function deleteVitals(req , res) {
+    try {
+        let vitalsId = req.params.id;
+        let deletedVitals = await Vitals.findByIdAndDelete(vitalsId);
+        if (!deletedVitals) {
+            return res.status(404).json({
+                success: false,
+                message: 'Vitals not found'
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Vitals has deleted successfully'
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+}
