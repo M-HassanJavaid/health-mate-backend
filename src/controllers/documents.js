@@ -3,9 +3,9 @@ import cloudinaryUpload from "../utils/cloudinaryUpload.js";
 import { v2 as cloudinary } from 'cloudinary'
 import mongoose from "mongoose";
 
-export async function uploadDocument(req , res) {
+export async function uploadDocument(req, res) {
     try {
-        const { name , note } = req.body ?? {};
+        const { name, note } = req.body ?? {};
         let userId = req.user._id;
 
         if (!name) {
@@ -24,7 +24,7 @@ export async function uploadDocument(req , res) {
 
         const fileExt = req.file.mimetype.split("/")[1]
 
-        let cloudinaryRes = await cloudinaryUpload(req.file.buffer, { 
+        let cloudinaryRes = await cloudinaryUpload(req.file.buffer, {
             folder: 'healthMate',
             resource_type: "auto",
             format: fileExt,
@@ -58,7 +58,7 @@ export async function uploadDocument(req , res) {
         if (req.fileId) {
             await cloudinary.uploader.destroy(req.fileId)
         }
-        
+
         res.status(500).json({
             success: false,
             message: error.message
@@ -67,10 +67,10 @@ export async function uploadDocument(req , res) {
     }
 }
 
-export async function getDocumentById(req , res) {
+export async function getDocumentById(req, res) {
     try {
         let documentId = req.params.id;
-        let document = await Document.findOne({ 
+        let document = await Document.findOne({
             _id: new mongoose.Types.ObjectId(documentId),
             user: req.user._id
         });
@@ -98,9 +98,9 @@ export async function getDocumentById(req , res) {
 };
 
 
-export async function getAllDocuments(req , res) {
+export async function getAllDocuments(req, res) {
     try {
-        let documents = await Document.find({ user : req.user._id });
+        let documents = await Document.find({ user: req.user._id });
         res.status(200).json({
             success: true,
             message: "User's all documents has sent to you.",
@@ -114,12 +114,12 @@ export async function getAllDocuments(req , res) {
     }
 }
 
-export async function updateDocument(req , res) {
+export async function updateDocument(req, res) {
     try {
         let documentId = req.params.id;
-        let { name , note } = req.body ?? {} ;
+        let { name, note } = req.body ?? {};
         console.log(req.body)
-        
+
 
         if (!name && !note && !req?.file && !req?.file?.buffer) {
             return res.status(400).json({
@@ -128,7 +128,7 @@ export async function updateDocument(req , res) {
             })
         }
 
-        let document = await Document.findOne({ 
+        let document = await Document.findOne({
             _id: new mongoose.Types.ObjectId(documentId),
             user: req.user._id
         });
@@ -138,8 +138,8 @@ export async function updateDocument(req , res) {
 
         if (req.file && req.file.buffer) {
             const fileExt = req.file.mimetype.split("/")[1]
-    
-            let cloudinaryRes = await cloudinaryUpload(req.file.buffer, { 
+
+            let cloudinaryRes = await cloudinaryUpload(req.file.buffer, {
                 folder: 'healthMate',
                 resource_type: "auto",
                 format: fileExt,
@@ -150,7 +150,7 @@ export async function updateDocument(req , res) {
 
             document.url = cloudinaryRes.secure_url;
             document.fileId = cloudinaryRes.public_id;
-            
+
         }
 
 
@@ -161,15 +161,15 @@ export async function updateDocument(req , res) {
             message: 'Document has updated successfully',
             updatedDocument
         })
-        
+
         if (req.documentToDelete) {
             await cloudinary.uploader.destroy(req.documentToDelete)
         }
-        
+
 
 
     } catch (error) {
-        
+
         res.status(500).json({
             success: false,
             message: error.message
@@ -179,7 +179,7 @@ export async function updateDocument(req , res) {
 }
 
 
-export async function deleteDocument(req  , res) {
+export async function deleteDocument(req, res) {
     try {
         let documentId = req.params.id;
         let deletedDocument = await Document.findByIdAndDelete({
@@ -199,6 +199,38 @@ export async function deleteDocument(req  , res) {
         })
 
     } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+
+export async function getRecentDocument(req, res) {
+    try {
+        let document = await Document
+            .find({ user: req.user._id })
+            .sort({ createdAt: -1 })
+            .limit(1)
+            .populate('aiReport');
+
+        if (!document) {
+            return res.status(404).json({
+                success: false,
+                message: 'Document not found'
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Document has sent successfully',
+            document: document[0]
+        })
+
+
+    } catch (error) {
+
         res.status(500).json({
             success: false,
             message: error.message

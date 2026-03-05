@@ -27,7 +27,8 @@ const documentSchema = new mongoose.Schema({
 
     aiReport: {
         default: null,
-        type: mongoose.Types.ObjectId
+        type: mongoose.Types.ObjectId,
+        ref: 'aiReport'
     }
 }, { timestamps: true });
 
