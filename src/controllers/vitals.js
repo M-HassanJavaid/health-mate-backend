@@ -115,18 +115,20 @@ export async function deleteVitals(req, res) {
         }
 
 
-        if (deletedVitals._id.toString() === latestVitals[0]._id.toString()) {
+        if (latestVitals.length > 0 && deletedVitals._id.toString() === latestVitals[0]._id.toString()) {
+            const nextVitals = latestVitals[1] || {};
+
             if (deletedVitals.weight) {
-                req.user.lastWeight = latestVitals[1].weight;
+                req.user.lastWeight = nextVitals.weight || null;
             }
             if (deletedVitals.sugar) {
-                req.user.lastSugar = latestVitals[1].sugar;
+                req.user.lastSugar = nextVitals.sugar || null;
             }
             if (deletedVitals.bloodPressure) {
-                req.user.lastBloodPressure = latestVitals[1].bloodPressure;
+                req.user.lastBloodPressure = nextVitals.bloodPressure || null;
             }
             if (deletedVitals.sleepingDuration) {
-                req.user.lastSleepingDuration = latestVitals[1].sleepingDuration;
+                req.user.lastSleepingDuration = nextVitals.sleepingDuration || null;
             }
             await req.user.save();
         }
