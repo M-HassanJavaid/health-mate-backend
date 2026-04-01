@@ -2,12 +2,12 @@ import Document from "../models/document.js";
 
 export async function getKpis(req, res) {
     try {
-        let totalReports = await Document.countDocuments();
-        let lastUplaod = await Document.find().sort({ createdAt: -1 }).limit(1);
-        let lastUplaodDate = lastUplaod.createdAt;
+        let totalReports = await Document.countDocuments({ user: req.user._id });
+        let lastUpload = await Document.find({ user: req.user._id }).sort({ createdAt: -1 }).limit(1);
+        let lastUploadDate = lastUpload[0]?.createdAt || null;
 
         let kpis = {
-            lastUplaodDate,
+            lastUploadDate,
             totalReports,
             lastBloodPressure: req.user.lastBloodPressure ? (
                 `${req.user.lastBloodPressure.systolic}/${req.user.lastBloodPressure.diastolic}`
